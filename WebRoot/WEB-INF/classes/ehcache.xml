@@ -1,0 +1,43 @@
+<ehcache>
+
+	<diskStore path="java.io.tmpdir" />
+
+	<defaultCache maxElementsInMemory="10000" eternal="false"
+		timeToIdleSeconds="120" timeToLiveSeconds="120" overflowToDisk="true"
+		maxElementsOnDisk="10000000" diskPersistent="false"
+		diskExpiryThreadIntervalSeconds="120" memoryStoreEvictionPolicy="LRU" />
+
+	<!-- set Category's Data expiration policies -->
+	<cache name="org.qiujy.domain.cachedemo.Category"
+		maxElementsInMemory="100" eternal="true" timeToIdleSeconds="0"
+		timeToLiveSeconds="0" overflowToDisk="false" />
+
+	<!-- set Category's productes Data expiration policies -->
+	<cache name="org.qiujy.domain.cachedemo.Category.products"
+		maxElementsInMemory="500" eternal="false" timeToIdleSeconds="300"
+		timeToLiveSeconds="600" overflowToDisk="true" />
+
+	<!-- set Product's Data expiration policies -->
+	<cache name="org.qiujy.domain.cachedemo.Product"
+		maxElementsInMemory="500" eternal="false" timeToIdleSeconds="300"
+		timeToLiveSeconds="600" overflowToDisk="true" />
+
+	<!-- set Default Data expiration policies -->
+	<cache name="org.hibernate.cache.StandardQueryCache"
+		maxElementsInMemory="50" eternal="false" timeToIdleSeconds="3600"
+		timeToLiveSeconds="7200" overflowToDisk="true" />
+
+	<!-- set customerQueries Data expiration policies -->
+	<cache name="myCacheRegion" maxElementsInMemory="1000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600" overflowToDisk="true" />
+
+	<!-- spring security's cache config. sparta 10/6/20 10:56 -->
+	<cache name="userCache" maxElementsInMemory="100" eternal="false"
+		timeToIdleSeconds="600" timeToLiveSeconds="3600" overflowToDisk="true" />
+
+	<!-- spring security's acls cache config. sparta 10/6/22 15:41 -->
+	<cache name="aclCache" maxElementsInMemory="1000" eternal="false"
+		timeToIdleSeconds="600" timeToLiveSeconds="3600" overflowToDisk="true" />
+
+
+</ehcache>

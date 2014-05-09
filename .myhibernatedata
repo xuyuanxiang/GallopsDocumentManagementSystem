@@ -1,0 +1,16 @@
+#MyEclipse Hibernate Properties
+#Fri Feb 14 13:37:30 CST 2014
+genVersionTag=false
+genAnnotations=false
+configFile=/GallopsDocumentManagementSystem/src/applicationContext.xml
+reStrategyClass=
+sessionFactoryId=sessionFactory
+profile=
+detectM2M=false
+genBasicCompId=false
+keyGenerator=
+createConfigFile=true
+basePersistenceClass=
+detectO2O=false
+useJavaTypes=true
+reSettingsFile=

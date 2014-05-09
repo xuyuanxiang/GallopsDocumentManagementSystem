@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-3.1.xsd 
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx.xsd ">
+
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+		destroy-method="close" p:driverClass="com.mysql.jdbc.Driver"
+		p:jdbcUrl="jdbc:mysql://localhost:3306/dm" p:user="root" p:password="root"
+		p:maxPoolSize="100" p:minPoolSize="10" p:initialPoolSize="3"
+		p:maxIdleTime="20" />
+
+	<bean name="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+		<property name="annotatedClasses">
+			<list>
+				<value>name.xuyuanxiang.model.User</value>
+				<value>name.xuyuanxiang.model.Department</value>
+				<value>name.xuyuanxiang.model.Group</value>
+				<value>name.xuyuanxiang.model.Role</value>
+				<value>name.xuyuanxiang.model.Privilege</value>
+				<value>name.xuyuanxiang.model.Operation</value>
+				<value>name.xuyuanxiang.model.Log</value>
+				<value>name.xuyuanxiang.model.Document</value>
+				<value>name.xuyuanxiang.model.Root</value>
+				<value>name.xuyuanxiang.model.Security</value>
+				<value>name.xuyuanxiang.model.Version</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<value>
+				hibernate.dialect=org.hibernate.dialect.MySQL5Dialect
+				hibernate.hbm2ddl.auto=create
+				hibernate.show_sql=false
+				hibernate.format_sql=false
+				hibernate.jdbc.fetch_size=50
+				hibernate.jdbc.batch_size=50
+				hibernate.query.substitutions=true 'Y',false 'N'
+				hibernate.cache.use_second_level_cache=true
+				hibernate.cache.provider_class=org.hibernate.cache.EhCacheProvider
+			</value>
+		</property>
+	</bean>
+
+	<bean name="transactionManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="userLocator" class="cn.myapps.webservice.client.UserServiceServiceLocator" />
+
+	<bean id="userService" factory-bean="userLocator" factory-method="getUserService" />
+
+	<bean name="daoTemplate" abstract="true" lazy-init="true"
+		p:sessionFactory-ref="sessionFactory" />
+
+	<bean id="managerTemplate" abstract="true" lazy-init="true"
+		p:userDao-ref="userDao" p:groupDao-ref="groupDao" p:documentDao-ref="documentDao"
+		p:securityDao-ref="securityDao" p:privilegeDao-ref="privilegeDao"
+		p:logDao-ref="logDao" p:departmentDao-ref="departmentDao"
+		p:versionDao-ref="versionDao" p:roleDao-ref="roleDao" p:rootDao-ref="rootDao"
+		p:operationDao-ref="operationDao" p:daos-ref="daos" p:userService-ref="userService">
+	</bean>
+
+	<bean id="userDao" class="name.xuyuanxiang.dao.UserDao" parent="daoTemplate" />
+	<bean id="groupDao" class="name.xuyuanxiang.dao.GroupDao" parent="daoTemplate" />
+	<bean id="departmentDao" class="name.xuyuanxiang.dao.DepartmentDao"
+		parent="daoTemplate" />
+	<bean id="roleDao" class="name.xuyuanxiang.dao.RoleDao" parent="daoTemplate" />
+	<bean id="privilegeDao" class="name.xuyuanxiang.dao.PrivilegeDao"
+		parent="daoTemplate" />
+	<bean id="rootDao" class="name.xuyuanxiang.dao.RootDao" parent="daoTemplate" />
+	<bean id="securityDao" class="name.xuyuanxiang.dao.SecurityDao"
+		parent="daoTemplate" />
+	<bean id="logDao" class="name.xuyuanxiang.dao.LogDao" parent="daoTemplate" />
+	<bean id="operationDao" class="name.xuyuanxiang.dao.OperationDao"
+		parent="daoTemplate" />
+	<bean id="documentDao" class="name.xuyuanxiang.dao.DocumentDao"
+		parent="daoTemplate" />
+	<bean id="versionDao" class="name.xuyuanxiang.dao.VersionDao"
+		parent="daoTemplate" />
+
+	<bean id="daos" class="java.util.HashMap">
+		<constructor-arg>
+			<map>
+				<entry key="User" value-ref="userDao" />
+				<entry key="Group" value-ref="groupDao" />
+				<entry key="Role" value-ref="roleDao" />
+				<entry key="Department" value-ref="departmentDao" />
+				<entry key="Document" value-ref="documentDao" />
+				<entry key="Privilege" value-ref="privilegeDao" />
+				<entry key="Operation" value-ref="operationDao" />
+				<entry key="Log" value-ref="logDao" />
+				<entry key="Root" value-ref="rootDao" />
+				<entry key="Security" value-ref="securityDao" />
+				<entry key="Version" value-ref="versionDao" />
+			</map>
+		</constructor-arg>
+	</bean>
+
+	<bean id="userManager" class="name.xuyuanxiang.service.UserManager"
+		parent="managerTemplate" />
+	<bean id="groupManager" class="name.xuyuanxiang.service.GroupManager"
+		parent="managerTemplate" />
+	<bean id="departmentManager" class="name.xuyuanxiang.service.DepartmentManager"
+		parent="managerTemplate" />
+	<bean id="roleManager" class="name.xuyuanxiang.service.RoleManager"
+		parent="managerTemplate" />
+	<bean id="privilegeManager" class="name.xuyuanxiang.service.PrivilegeManager"
+		parent="managerTemplate" />
+	<bean id="operationManager" class="name.xuyuanxiang.service.OperationManager"
+		parent="managerTemplate" />
+	<bean id="documentManager" class="name.xuyuanxiang.service.DocumentManager"
+		parent="managerTemplate" />
+	<bean id="logManager" class="name.xuyuanxiang.service.LogManager"
+		parent="managerTemplate" />
+	<bean id="securityManager" class="name.xuyuanxiang.service.SecurityManager"
+		parent="managerTemplate" />
+	<bean id="rootManager" class="name.xuyuanxiang.service.RootManager"
+		parent="managerTemplate" />
+	<bean id="versionManager" class="name.xuyuanxiang.service.VersionManager"
+		parent="managerTemplate" />
+</beans>
